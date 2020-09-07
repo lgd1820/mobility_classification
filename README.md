@@ -3,7 +3,7 @@
 
 공공 데이터 포털에서 수집한 버스 궤적을 학습시켜 위드라이브 궤적에 대해 분류하여 버스 궤적을 검출해내는 것이 목표
 
-![bus_raw_data](./images/bus_raw_data.png)
+![bus_raw_data](mobility_classification/images/bus_raw_data.png)
 <pre><code>
 </code></pre>
 insert_missing_value.py
