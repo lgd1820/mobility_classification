@@ -2,8 +2,9 @@
 
 
 공공 데이터 포털에서 수집한 버스 궤적을 학습시켜 위드라이브 궤적에 대해 분류하여 버스 궤적을 검출해내는 것이 목표
-<pre><code>
+
 ![bus_raw_data](./images/bus_raw_data.png)
+<pre><code>
 </code></pre>
 insert_missing_value.py
 - 거리에 따른 결측치 값 추가 코드
