@@ -42,7 +42,7 @@ for p in predict_y:
 
 print(l)
 
-with open(cwd + "/mode/data/test_data/wedrive_grid.txt", "r") as f:
+with open(cwd + "/mode/data//bus/npy_data/wedrive_grid.txt", "r") as f:
     line_count = 0
     while(True):
         line_count += 1
