@@ -1,16 +1,17 @@
+# 권동 2020-09-08 18:03
 import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
 import os
 import csv
 
-# 권동 - 경로 수적 해야함 2020-09-08 18:03
 def impute_main():
     cwd = os.getcwd()
-    load_path = cwd + '/data/bus_missing_trajectory/'
-    save_path = cwd + '/data/bus_correct_trajectory/'
+    load_path = cwd + '/data/bus/bus_missing_trajectory/'
+    save_path = cwd + '/data/bus/bus_correct_trajectory/'
     version_list = os.listdir(load_path)
     for ver_i in version_list:
+        # 143.5 오류나서 파일 확인해야함
         if not "143.5" in ver_i: continue
         version_path = load_path + ver_i
         file_list = os.listdir(version_path)
