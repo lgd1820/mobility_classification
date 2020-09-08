@@ -1,3 +1,4 @@
+# Lee Gwon Dong 2020-09-08 18:29
 from haversine import haversine
 from datetime import datetime
 from math import *
@@ -19,6 +20,7 @@ dlng = elng - slng
 cell_lat = dlat/370
 cell_lng = dlng/330
 
+# 두 좌표 간의 방향을 측정하는 함수
 def bearing(s_lat, s_lng, e_lat, e_lng):
     lat1 = radians(s_lat)
     lat2 = radians(e_lat)
@@ -33,13 +35,13 @@ def bearing(s_lat, s_lng, e_lat, e_lng):
 
 def get_bus_grid():
     bus_station_grid = []
-    cwd = os.getcwd() + "\\mode\\data\\wedrive_bus"
-    files = os.listdir(cwd + "\\bus_station\\")
+    cwd = os.getcwd()
+    files = os.listdir(cwd + "/bus_station/")
     for filename in files:
         # csv 파일은 정제한 데이터
         if ".csv" not in filename:
             continue
-        with open(cwd + "\\bus_station\\" + filename, "r", encoding='UTF-8') as f:
+        with open(cwd + "/bus_station/" + filename, "r", encoding='UTF-8') as f:
             while True:
                 line = f.readline()
                 if not line: break
@@ -53,14 +55,14 @@ def get_bus_grid():
     return bus_station_grid
 
 def bus_trajectory():
-    cwd = os.getcwd() + "\\mode\\data"
-    directorys = os.listdir(cwd + "\\bus_correct_trajectory") 
+    cwd = os.getcwd() + "/mode/data"
+    directorys = os.listdir(cwd + "/bus_correct_trajectory") 
     trajectory = []
     for dname in directorys:
         if not "143" in dname: continue
-        files = os.listdir(cwd + "\\bus_correct_trajectory\\" + dname)
+        files = os.listdir(cwd + "/bus_correct_trajectory/" + dname)
         for filename in files:
-            with open(cwd + "\\bus_correct_trajectory\\" + dname + "\\" + filename) as f:
+            with open(cwd + "/bus_correct_trajectory/" + dname + "/" + filename) as f:
                 lines = csv.reader(f,delimiter = ",")
                 p_time = 0
                 x = 0
@@ -148,7 +150,7 @@ def save_grid():
         dataset.append(cell)
     dataset = np.array(dataset)
     print(dataset.shape)
-    cwd = os.getcwd() + "\\mode\\data\\study_data\\"
+    cwd = os.getcwd() + "/mode/data/study_data/"
     np.save( cwd + "study_data_missing_even.npy", dataset)
 
 save_grid()

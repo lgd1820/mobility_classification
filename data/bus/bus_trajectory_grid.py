@@ -56,18 +56,18 @@ def get_bus_grid():
     return bus_station_grid
 
 # 버스 궤적을 CELL로 변형하여 리스트로 바꾸는 함수
-def bus_trajectory():
+def bus_trajectory(trajectory_name="bus_missing_trajectory"):
     cwd = os.getcwd()
-    directorys = os.listdir(cwd + "/bus_trajectory") 
+    directorys = os.listdir(cwd + "/" + trajectory_name + "/") 
     trajectory = []
     # 각 버스 노선 별로 각기 다른 시간대에 수집한 데이터가 저장되어있음
     for dname in directorys:
         # 우선 테스트는 143번에 한해서 실행함
         if not "143" in dname: continue
-        files = os.listdir(cwd + "/bus_trajectory/" + dname)
+        files = os.listdir(cwd + "/" + trajectory_name + "/" + dname)
         for filename in files:
             # 하나의 노선에 해당 시간대에 운행중인 버스들
-            with open(cwd + "/bus_trajectory/" + dname + "/" + filename) as f:
+            with open(cwd + "/" + trajectory_name + "y/" + dname + "/" + filename) as f:
                 lines = csv.reader(f,delimiter = ",")
                 p_time = 0
                 x = 0
@@ -105,7 +105,7 @@ def bus_trajectory():
 
 # bus_trajectory 에서 나온 리스트를 정거장 별로 자르는 함수
 def make_slice(cut_size_list=[5], stride_size_list=[1]):
-    trajectory_list = bus_trajectory()
+    trajectory_list = bus_trajectory("bus_missing_trajectory")
     bus_station_list = get_bus_grid()
     slice_trajectory = []
     for trajectory in trajectory_list:
