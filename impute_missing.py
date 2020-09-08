@@ -4,6 +4,7 @@ import tensorflow_probability as tfp
 import os
 import csv
 
+# 권동 - 경로 수적 해야함 2020-09-08 18:03
 def impute_main():
     cwd = os.getcwd()
     load_path = cwd + '/data/bus_missing_trajectory/'
@@ -35,7 +36,6 @@ def convert_data(load_path):
     lng_list = []
     with open(load_path, 'r') as r_01:
         while True :
-#           for i in range (30) :
             line = r_01.readline().replace('\n', '')
             if not line : break
             line_list = line.split(',')
@@ -59,6 +59,7 @@ def convert_data(load_path):
             lng_list.append(lng)
     return time_list, lat_list, lng_list, file_i
 
+# 이부분은 주형이가 주석을
 def impute_missing_value (input_data):
     time_series_with_nans = input_data
     print('AAA_time_series:', time_series_with_nans)
