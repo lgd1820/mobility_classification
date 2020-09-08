@@ -24,6 +24,10 @@ impute_missing.py
 
 ![image](https://user-images.githubusercontent.com/65576979/92386395-af5be600-f14e-11ea-9b92-38daca2548f7.png)
 
+데이터 전처리
+------------
+![image](https://user-images.githubusercontent.com/65576979/92451309-817eac00-f1f7-11ea-9f18-43921fba30d6.png)
+
 missing_train.py
 - 결측치 보정한 데이터 학습 코드
 
