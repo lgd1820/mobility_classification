@@ -21,6 +21,7 @@ impute_missing.py
 
 결측치 보정을 통해 만들어진 궤적은 아래 사진과 같다.
 빨간색의 궤적은 일반 버스 궤적이고 파란색 궤적은 보정된 버스 궤적이다.
+
 ![image](https://user-images.githubusercontent.com/65576979/92386395-af5be600-f14e-11ea-9b92-38daca2548f7.png)
 
 missing_train.py
