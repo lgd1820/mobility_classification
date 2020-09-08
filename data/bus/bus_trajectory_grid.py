@@ -1,3 +1,4 @@
+# Lee Gwon Dong 2020-09-08 18:29
 from haversine import haversine
 from datetime import datetime
 from math import *
@@ -19,6 +20,7 @@ dlng = elng - slng
 cell_lat = dlat/370
 cell_lng = dlng/330
 
+# 두 좌표 간의 방향을 측정하는 함수
 def bearing(s_lat, s_lng, e_lat, e_lng):
     lat1 = radians(s_lat)
     lat2 = radians(e_lat)
@@ -31,15 +33,16 @@ def bearing(s_lat, s_lng, e_lat, e_lng):
     compass_bearing = (initial_bearing + 360) % 360
     return int(compass_bearing)
 
+# 버스 정거장에 해당하는 CELL 인덱스를 리턴해주는 함수
 def get_bus_grid():
     bus_station_grid = []
-    cwd = os.getcwd() + "\\mode\\data\\wedrive_bus"
-    files = os.listdir(cwd + "\\bus_station\\")
+    cwd = os.getcwd()
+    files = os.listdir(cwd + "/bus_station/")
     for filename in files:
         # csv 파일은 정제한 데이터
         if ".csv" not in filename:
             continue
-        with open(cwd + "\\bus_station\\" + filename, "r", encoding='UTF-8') as f:
+        with open(cwd + "/bus_station/" + filename, "r", encoding='UTF-8') as f:
             while True:
                 line = f.readline()
                 if not line: break
@@ -52,15 +55,19 @@ def get_bus_grid():
     
     return bus_station_grid
 
+# 버스 궤적을 CELL로 변형하여 리스트로 바꾸는 함수
 def bus_trajectory():
-    cwd = os.getcwd() + "\\mode\\data\\wedrive_bus"
-    directorys = os.listdir(cwd + "\\bus_trajectory") 
+    cwd = os.getcwd()
+    directorys = os.listdir(cwd + "/bus_trajectory") 
     trajectory = []
+    # 각 버스 노선 별로 각기 다른 시간대에 수집한 데이터가 저장되어있음
     for dname in directorys:
+        # 우선 테스트는 143번에 한해서 실행함
         if not "143" in dname: continue
-        files = os.listdir(cwd + "\\bus_trajectory\\" + dname)
+        files = os.listdir(cwd + "/bus_trajectory/" + dname)
         for filename in files:
-            with open(cwd + "\\bus_trajectory\\" + dname + "\\" + filename) as f:
+            # 하나의 노선에 해당 시간대에 운행중인 버스들
+            with open(cwd + "/bus_trajectory/" + dname + "/" + filename) as f:
                 lines = csv.reader(f,delimiter = ",")
                 p_time = 0
                 x = 0
@@ -96,7 +103,8 @@ def bus_trajectory():
                     trajectory.append(cut_list)
     return trajectory
 
-def make_slice(cut_size_list=None, stride_size_list=None):
+# bus_trajectory 에서 나온 리스트를 정거장 별로 자르는 함수
+def make_slice(cut_size_list=[5], stride_size_list=[1]):
     trajectory_list = bus_trajectory()
     bus_station_list = get_bus_grid()
     slice_trajectory = []
@@ -124,6 +132,7 @@ def make_slice(cut_size_list=None, stride_size_list=None):
                     to_n += stride_size
     return slice_trajectory
     
+# 슬라이스 된 데이터를 100x100 형태의 입력 데이터로 만드는 함수
 def save_grid():
     slice_trajectory = make_slice(cut_size_list=[20, 21, 22, 23, 24, 25], stride_size_list=[1])
     dataset = []
@@ -145,7 +154,7 @@ def save_grid():
             cell[sc[i][0]][sc[i][1]] = (time, heading)    
         dataset.append(cell)
     dataset = np.array(dataset)
-    cwd = os.getcwd() + "\\mode\\data\\study_data\\"
-    np.save( cwd + "study_data_not_missing6.npy", dataset)
+    cwd = os.getcwd()
+    np.save( cwd + "/npy_data/" + "study_data_not_missing6.npy", dataset)
 
 save_grid()
