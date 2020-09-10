@@ -29,4 +29,15 @@ bus_raw의 데이터를 궤적별로(버스별로) 1차 전처리한 데이터�
 bus_trajectory_grid.py
 </code></pre>
 
-"# mobility_classification" 
+"# mobility_classification"
+
+<pre><code>
+insert_missing_value.py
+</code></pre>
+위 코드는 거리에 따른 결측치 값을 추가하는 코드로 현재 100미터 간격으로 결측치를 추가한다.
+
+<pre><code>
+impute_missing.py
+</code></pre>
+위 코드는 결측치가 추가된 버스 궤적을 학습을 통해 결측치에 대한 값을 보정하여 궤적을 만든다.
+
