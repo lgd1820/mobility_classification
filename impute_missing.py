@@ -34,9 +34,10 @@ def impute_main():
                 for i in range(len(c_time)): 
                     w_csv.writerow([c_time[i], e_lat[i], e_lng[i]])
 
+### 함수 개요
 # txt파일에 문자열 데이터 형식으로 저장된 nan 값을 np.nan으로 변경
 # 또한 각 속성 별로 각각 다른 리스트에 저장하여 반환
-# 매개변수
+## 매개변수
 # load_path : 궤적 파일이 저장된 경로
 def convert_data(load_path):
     file_i = load_path.split("/")[-1]
