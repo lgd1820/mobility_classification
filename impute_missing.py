@@ -1,4 +1,9 @@
-# 권동 2020-09-08 18:03
+'''
+작성일 : 2020-09-10
+작성자 : 이권동, 맹주형
+코드 개요 : 버스 궤적 데이터를 불러와 각 위도, 경도의 결측치를 보정하는 코드
+'''
+
 import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
@@ -6,6 +11,9 @@ import os
 import csv
 
 def impute_main():
+    '''
+    main 함수
+    '''
     cwd = os.getcwd()
     load_path = cwd + '/data/bus/bus_missing_trajectory/'
     save_path = cwd + '/data/bus/bus_correct_trajectory/'
@@ -31,6 +39,13 @@ def impute_main():
                     w_csv.writerow([c_time[i], e_lat[i], e_lng[i]])
 
 def convert_data(load_path):
+    '''
+    함수 개요 :
+        txt파일에 문자열 데이터 형식으로 저장된 nan 값을 np.nan으로 변경
+        또한, 각 속성 별로 각각 다른 리스트에 저장하여 반환
+    매개변수 :
+        load_path = 궤적 파일이 저장된 경로
+    '''
     file_i = load_path.split("/")[-1]
     time_list = []
     lat_list = []
@@ -60,8 +75,15 @@ def convert_data(load_path):
             lng_list.append(lng)
     return time_list, lat_list, lng_list, file_i
 
-# 이부분은 주형이가 주석을
+
 def impute_missing_value (input_data):
+    '''
+    함수 개요 :
+        tensorflow porbability API를 사용하여, 1차원 벡터 데이터를 보정
+        (단, nan값 뿐만 아니라 모든 값들이 보정되므로, nan값의 인덱스를 따로 저장했다가 보정된 nan값과 나머지 원본 데이터를 재취합 시켜줘야함)
+    매개변수 :
+        input_data : nan값이 포함된 1차원 벡터 데이터
+    '''
     time_series_with_nans = input_data
     print('AAA_time_series:', time_series_with_nans)
 
@@ -87,7 +109,6 @@ def impute_missing_value (input_data):
     forecast_dist = tfp.sts.forecast(model, observed_time_series,
         num_steps_forecast=5, parameter_samples = parameter_samples)
     print('AAA_fore_dist:', forecast_dist)
-
 
     # Impute missing values
     observations_dist = tfp.sts.impute_missing_values(
