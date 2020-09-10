@@ -1,13 +1,21 @@
-# LGD 2020-09-10 18:57 
+'''
+작성일 : 2020-09-10
+작성자 : 이권동
+코드 개요 : 저장된 버스, 위드라이브 데이터를 불러와 학습, 테스트 데이터셋으로 나누고 학습 후 모델을 저장하는 코드
+'''
 import pandas as pd
 import os
 import numpy as np
 import tensorflow as tf
 
-# LGD 2020-09-10 18:57
-# train 데이터와 test 데이터를 test_size 비율에 따른 split default 값은 8:2
-# random_state : 랜덤 시드라서 그대로 두면 됨
-# x : data, y: label 
+
+'''
+    함수 개요 :
+        train 데이터와 test 데이터를 test_size 비율에 따른 split, default 값은 8:2
+    매개변수 :
+        x = data, y = label
+        random_state = 랜덤 시드라서 그대로 두면 됨
+'''
 def train_test_split(x, y, test_size=0.2, random_state=1004):
     test_num = int(x.shape[0] * test_size)
     train_num = x.shape[0] - test_num
@@ -28,9 +36,13 @@ def train_test_split(x, y, test_size=0.2, random_state=1004):
         y_test = y[train_num:]
     return x_train, x_test, y_train, y_test
 
-# LGD 2020-09-10 18:57
-# npy 데이터 정규화
-# data : x
+
+'''
+    함수 개요 :
+        npy 데이터 정규화
+    매개변수 :
+        data = x
+'''
 def normalize(data):
     data = data.astype(np.float32)
     mean = np.mean(data)
@@ -39,12 +51,17 @@ def normalize(data):
     data /= std
     return data
 
-# LGD 2020-09-10 18:57
-# 학습데이터와 테스트 데이터를 전처리하는 함수
-# 현재 bus data 보다 wedrive data 가 압도적으로 많기 때문에
-# 셔플한 wedrive data에서 bus data 의 크기만큼 잘라서 train data로 전처리
-# bus data도 20% 만큼 test data에 들어감
-# train data에 들어간 wedrive data를 제외하고 wedrive data는 전부 test data로 들어감
+'''
+    함수 개요 :
+        학습데이터와 테스트 데이터를 전처리하는 함수
+        현재 bus data 보다 wedrive data 가 압도적으로 많기 때문에
+        셔플한 wedrive data에서 bus data 의 크기만큼 잘라서 train data로 전처리
+        bus data도 20% 만큼 test data에 들어감
+        train data에 들어간 wedrive data를 제외하고 wedrive data는 전부 test data로 들어감
+    매개변수 :
+        bus_data = 버스 데이터(npy)
+        wedrive_data = 위드라이브 데이터(npy)
+'''
 def data_processing(bus_data, wedrive_data):
     print('bus_data', bus_data.shape, 'wedrive_data shape:', wedrive_data.shape)
 
@@ -75,8 +92,10 @@ def data_processing(bus_data, wedrive_data):
 
     return x_data, y_data, x_test, y_test
 
-# LGD 2020-09-10 18:57
-# 모델 설정
+'''
+    함수 개요 :
+        학습 네트워크를 설정하고 return 해주는 함수
+'''
 def set_model():
     model = tf.keras.Sequential()
     model.add(tf.keras.layers.Conv2D(8, kernel_size=(3, 3), strides=(1, 1), padding='same', activation='relu', input_shape=(100, 100, 2)))
@@ -100,9 +119,15 @@ def set_model():
 
     return model
 
-# LGD 2020-09-10 18:57
-# data 불러오고 학습 실행하는 함수
-# ver에 따른 모델 버전을 다르게 저장(그냥 이름을 다르게 하기 위한 용도)
+
+'''
+    함수 개요 :
+    data 불러오고 학습 실행하는 함수
+    ver에 따른 모델 버전을 다르게 저장(그냥 이름을 다르게 하기 위한 용도)
+    매개변수 :
+        bus_data = 버스 데이터(npy)
+        wedrive_data = 위드라이브 데이터(npy)
+'''
 def cnn_main():
     ver = "5"
 
