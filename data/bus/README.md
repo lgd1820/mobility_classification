@@ -29,8 +29,6 @@ bus_raw의 데이터를 궤적별로(버스별로) 1차 전처리한 데이터�
 bus_trajectory_grid.py
 </code></pre>
 
-"# mobility_classification"
-
 <pre><code>
 insert_missing_value.py
 </code></pre>
