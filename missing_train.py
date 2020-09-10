@@ -1,9 +1,14 @@
+# LGD 2020-09-10 18:57 
 import pandas as pd
 import os
 import numpy as np
 import tensorflow as tf
 
-def train_test_split(x, y, test_size=0.2, shuffle=True, random_state=1004):
+# LGD 2020-09-10 18:57
+# train 데이터와 test 데이터를 test_size 비율에 따른 split default 값은 8:2
+# random_state : 랜덤 시드라서 그대로 두면 됨
+# x : data, y: label 
+def train_test_split(x, y, test_size=0.2, random_state=1004):
     test_num = int(x.shape[0] * test_size)
     train_num = x.shape[0] - test_num
 
@@ -23,6 +28,9 @@ def train_test_split(x, y, test_size=0.2, shuffle=True, random_state=1004):
         y_test = y[train_num:]
     return x_train, x_test, y_train, y_test
 
+# LGD 2020-09-10 18:57
+# npy 데이터 정규화
+# data : x
 def normalize(data):
     data = data.astype(np.float32)
     mean = np.mean(data)
@@ -31,17 +39,23 @@ def normalize(data):
     data /= std
     return data
 
-def data_processing(study_data, test_data_path):
-    print('study_data', study_data.shape, 'test_data_path shape:', test_data_path.shape)
+# LGD 2020-09-10 18:57
+# 학습데이터와 테스트 데이터를 전처리하는 함수
+# 현재 bus data 보다 wedrive data 가 압도적으로 많기 때문에
+# 셔플한 wedrive data에서 bus data 의 크기만큼 잘라서 train data로 전처리
+# bus data도 20% 만큼 test data에 들어감
+# train data에 들어간 wedrive data를 제외하고 wedrive data는 전부 test data로 들어감
+def data_processing(bus_data, wedrive_data):
+    print('bus_data', bus_data.shape, 'wedrive_data shape:', wedrive_data.shape)
 
-    study_data = normalize(study_data)
-    test_data_path = normalize(test_data_path)
+    bus_data = normalize(study_data)
+    wedrive_data = normalize(wedrive_data)
     
-    study_data = study_data.reshape(-1, 100, 100, 2).astype('float32')
+    study_data = bus_data.reshape(-1, 100, 100, 2).astype('float32')
     study_data_label = np.array([0 for _ in range(len(study_data))])
     study_x_train, study_x_test, study_y_train, study_y_test = train_test_split(study_data, study_data_label)
 
-    test_data = test_data_path.reshape(-1, 100, 100, 2).astype('float32')
+    test_data = wedrive_data.reshape(-1, 100, 100, 2).astype('float32')
     shuffle_indices = np.random.permutation(np.arange(len(test_data)))
     test_data = test_data[shuffle_indices]
     test_data_label = np.array([1 for _ in range(len(test_data))])
@@ -61,6 +75,8 @@ def data_processing(study_data, test_data_path):
 
     return x_data, y_data, x_test, y_test
 
+# LGD 2020-09-10 18:57
+# 모델 설정
 def set_model():
     model = tf.keras.Sequential()
     model.add(tf.keras.layers.Conv2D(8, kernel_size=(3, 3), strides=(1, 1), padding='same', activation='relu', input_shape=(100, 100, 2)))
@@ -84,20 +100,23 @@ def set_model():
 
     return model
 
+# LGD 2020-09-10 18:57
+# data 불러오고 학습 실행하는 함수
+# ver에 따른 모델 버전을 다르게 저장(그냥 이름을 다르게 하기 위한 용도)
 def cnn_main():
-    cwd = os.getcwd()
-    ver = "_5"
-    study_data_path = cwd + \
-        "\\mode\\data\\study_data\\study_data_missing" + ver +".npy"
-    test_data_path = cwd + "\\mode\\data\\test_data\\wedrive_grid2.npy"
+    ver = "5"
 
-    study_data = np.load(study_data_path)
-    test_data_path = np.load(test_data_path)
+    # bus npy 경로 잘보고 사용할 것
+    bus_data_path = "./data/bus/npy/"
+    wedrive_data_path = "./data/wedrive/npy/"
 
-    x_train, y_train, x_test, y_test = data_processing(study_data, test_data_path)
+    study_data = np.load(bus_data_path)
+    wedrive_data = np.load(wedrive_data_path)
+
+    x_train, y_train, x_test, y_test = data_processing(study_data, wedrive_data)
     model = set_model()
     model.summary()
-    '''
+    
     model.fit(x=x_train, y=y_train, epochs=3, batch_size=64)
 
     eval_y = model.evaluate(x_test, y_test, batch_size=64)
@@ -107,6 +126,6 @@ def cnn_main():
     print(eval_y)
     print("f1-score", 2 * (eval_y[2] * eval_y[3]) / (eval_y[2] + eval_y[3]))
 
-    model.save(cwd + "\\mode\\model\\model_missing" + ver +".h5")
-    '''
+    model.save("./model/model_" + ver +".h5")
+
 cnn_main()
