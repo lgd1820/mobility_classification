@@ -56,7 +56,7 @@ def get_bus_grid():
     return bus_station_grid
 
 # 버스 궤적을 CELL로 변형하여 리스트로 바꾸는 함수
-def bus_trajectory(trajectory_name="bus_missing_trajectory"):
+def bus_trajectory(trajectory_name="bus_correct_trajectory"):
     cwd = os.getcwd()
     directorys = os.listdir(cwd + "/" + trajectory_name + "/") 
     trajectory = []
@@ -105,7 +105,7 @@ def bus_trajectory(trajectory_name="bus_missing_trajectory"):
 
 # bus_trajectory 에서 나온 리스트를 정거장 별로 자르는 함수
 def make_slice(cut_size_list=[5], stride_size_list=[1]):
-    trajectory_list = bus_trajectory("bus_missing_trajectory")
+    trajectory_list = bus_trajectory("bus_correct_trajectory")
     bus_station_list = get_bus_grid()
     slice_trajectory = []
     for trajectory in trajectory_list:
