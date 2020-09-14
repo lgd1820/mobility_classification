@@ -21,6 +21,8 @@ cell_lat = dlat/370
 cell_lng = dlng/330
 
 # 두 좌표 간의 방향을 측정하는 함수
+# s_lat, s_lng = 시작 좌표의 latitude, longitude
+# e_lat, e_lng = 끝 좌표의 latitude, longitude
 def bearing(s_lat, s_lng, e_lat, e_lng):
     lat1 = radians(s_lat)
     lat2 = radians(e_lat)
@@ -56,6 +58,7 @@ def get_bus_grid():
     return bus_station_grid
 
 # 버스 궤적을 CELL로 변형하여 리스트로 바꾸는 함수
+# trajectory_name = 버스 궤적이 저장되어있는 폴더의 
 def bus_trajectory(trajectory_name="bus_missing_trajectory"):
     cwd = os.getcwd()
     directorys = os.listdir(cwd + "/" + trajectory_name + "/") 
@@ -104,6 +107,8 @@ def bus_trajectory(trajectory_name="bus_missing_trajectory"):
     return trajectory
 
 # bus_trajectory 에서 나온 리스트를 정거장 별로 자르는 함수
+# cut_size_list = 슬라이스 할 윈도우 크기의 리스트
+# stride_size_list = 슬라이스할 간격의 리스트
 def make_slice(cut_size_list=[5], stride_size_list=[1]):
     trajectory_list = bus_trajectory("bus_missing_trajectory")
     bus_station_list = get_bus_grid()
