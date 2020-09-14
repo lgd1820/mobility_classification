@@ -58,12 +58,8 @@ def get_bus_grid():
     return bus_station_grid
 
 # 버스 궤적을 CELL로 변형하여 리스트로 바꾸는 함수
-<<<<<<< HEAD
+# trajectory_name = 버스 궤적이 저장되어있는 폴더의
 def bus_trajectory(trajectory_name="bus_correct_trajectory"):
-=======
-# trajectory_name = 버스 궤적이 저장되어있는 폴더의 
-def bus_trajectory(trajectory_name="bus_missing_trajectory"):
->>>>>>> 6d016952bbe42c93c429043f2e59067f54dca164
     cwd = os.getcwd()
     directorys = os.listdir(cwd + "/" + trajectory_name + "/") 
     trajectory = []
