@@ -1,4 +1,5 @@
 # Lee Gwon Dong 2020-09-08 18:29
+#-*- coding: utf-8 -*-
 from haversine import haversine
 from datetime import datetime
 from math import *
@@ -54,7 +55,6 @@ def get_bus_grid():
                 if ((grid_lat > 99 or grid_lat <= -1) or (grid_lng >= 101 or grid_lng <= -1)):
                     continue
                 bus_station_grid.append((grid_lat, grid_lng))
-    
     return bus_station_grid
 
 # 버스 궤적을 CELL로 변형하여 리스트로 바꾸는 함수
@@ -70,7 +70,7 @@ def bus_trajectory(trajectory_name="bus_correct_trajectory"):
         files = os.listdir(cwd + "/" + trajectory_name + "/" + dname)
         for filename in files:
             # 하나의 노선에 해당 시간대에 운행중인 버스들
-            with open(cwd + "/" + trajectory_name + "y/" + dname + "/" + filename) as f:
+            with open(cwd + "/" + trajectory_name + "/" + dname + "/" + filename) as f:
                 lines = csv.reader(f,delimiter = ",")
                 p_time = 0
                 x = 0
@@ -85,13 +85,13 @@ def bus_trajectory(trajectory_name="bus_correct_trajectory"):
                     grid_y = int((float(line[2])-slng)/cell_lng)
                     if (grid_x >= 87 and grid_x < 187) and (grid_y >= 112 and grid_y < 212):
                         if len(cut_list) == 0:
-                            p_time = datetime.strptime(line[0],"%Y%m%d%H%M%S")
+                            p_time = int(float(line[0]))
                         else:
-                            if (datetime.strptime(line[0],"%Y%m%d%H%M%S") - p_time) == 0:
+                            if (int(float(line[0])) - p_time) == 0:
                                 continue
                         lat = float(line[1])
                         lng = float(line[2])
-                        time = datetime.strptime(line[0],"%Y%m%d%H%M%S")
+                        time = int(float(line[0]))
                         cut_list.append([grid_x - 87, grid_y - 112, lat, lng, time])
                         p_time = time
                         is_in = 1
@@ -109,7 +109,7 @@ def bus_trajectory(trajectory_name="bus_correct_trajectory"):
 # bus_trajectory 에서 나온 리스트를 정거장 별로 자르는 함수
 # cut_size_list = 슬라이스 할 윈도우 크기의 리스트
 # stride_size_list = 슬라이스할 간격의 리스트
-def make_slice(cut_size_list=[5], stride_size_list=[1]):
+def make_slice(cut_size_list, stride_size_list):
     trajectory_list = bus_trajectory("bus_correct_trajectory")
     bus_station_list = get_bus_grid()
     slice_trajectory = []
@@ -120,7 +120,6 @@ def make_slice(cut_size_list=[5], stride_size_list=[1]):
             if (gps[0], gps[1]) in bus_station_list:
                 trajectory_in_bustation.append(count)
                 count += 1
-                
         for cut_size in cut_size_list:
             for stride_size in stride_size_list:
                 from_n = 0
@@ -130,7 +129,7 @@ def make_slice(cut_size_list=[5], stride_size_list=[1]):
                         if len(trajectory_in_bustation) == 0:
                             slice_trajectory.append(trajectory)
                             break
-                        slice_trajectory.append(trajectory[trajectory_in_bustation[from_n]:])                  
+                        slice_trajectory.append(trajectory[trajectory_in_bustation[from_n]:])
                         break
                     slice_trajectory.append(trajectory[trajectory_in_bustation[from_n]:trajectory_in_bustation[to_n]])
                     from_n += stride_size
@@ -150,10 +149,10 @@ def save_grid():
                 time = 0
                 heading = bearing(sc[i][2], sc[i][3], sc[i+1][2], sc[i+1][3])
             elif i == len(sc) -1:
-                time = (sc[i][4] - p_time).seconds
+                time = (sc[i][4] - p_time)
                 heading = 0
             else:
-                time = (sc[i][4] - p_time).seconds
+                time = (sc[i][4] - p_time)
                 heading = bearing(sc[i][2], sc[i][3], sc[i+1][2], sc[i+1][3])
             p_time = sc[i][4]
             cell[sc[i][0]][sc[i][1]] = (time, heading)    
